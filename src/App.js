@@ -1,10 +1,38 @@
 import logo from './logo.svg';
-import './App.css';
+import './App.scss';
+import { useState } from 'react';
+import ColorBox from './components/ColorBox/ColorBox.js';
+
+import List from './components/List/List';
+import Form from './components/Form/Form';
 
 function App() {
-  const todos = ["Go to market", "Buy food", "Make dinner"];
-  const listItems = todos.map((item) =><li>{item}</li>);
+  const [listItem, setListItem] =  useState(
+    [{id:1, title:"Go to market"},
+      {id:2, title:"Buy food"} ,
+      {id:3, title:"Make dinner"}]);
+  function handleClick(el) {
+  
+    const index = listItem.findIndex(x => x.id === el.id);
+    if( index <0) return;
+    const newArr =[...listItem];
+    newArr.splice(index,1);
+    setListItem(newArr)
+  }
+
+  function handleOnSubmit(formValues) {
+    console.log('...',formValues);
+    const newItem = {  id: listItem.length+1, ...formValues}
+   
+    ;
+    const newArr = [...listItem];
+    newArr.push(newItem)
+    setListItem(newArr)
+  }
   return (
+
+
+
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
@@ -19,9 +47,10 @@ function App() {
         >
           Learn React
         </a>
-        <ul>
-           {listItems}
-          </ul>
+        <ColorBox/>
+        <Form onSubmit={handleOnSubmit}/>
+        <List todos={listItem} onTodoClick={handleClick}/>
+      
       </header>
     </div>
   );
