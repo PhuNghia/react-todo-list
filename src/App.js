@@ -1,16 +1,58 @@
 import logo from './logo.svg';
 import './App.scss';
-import { useState } from 'react';
-import ColorBox from './components/ColorBox/ColorBox.js';
+import { useEffect, useState } from 'react';
+import queryString from 'query-string'
 
+import ColorBox from './components/ColorBox/ColorBox.js';
 import List from './components/List/List';
 import Form from './components/Form/Form';
+import PostList from './components/PostList/PostList';
+import Pagination from './components/Pagination/Pagination';
 
 function App() {
   const [listItem, setListItem] =  useState(
     [{id:1, title:"Go to market"},
       {id:2, title:"Buy food"} ,
       {id:3, title:"Make dinner"}]);
+  const [postList,setPostlist]= useState([]);
+  const [pagination,setPagination]= useState({
+    _page : 1,
+    _limit : 10,
+    _totalRows : 11
+  });
+  
+  const [filters,setFilters] = useState({
+    _limit: 5,
+    _page :1,
+  })
+  useEffect(() => {
+    async function fetchPostList() {
+      try {
+        const paramsString = queryString.stringify(filters);
+        const requestUrl = `http://js-post-api.herokuapp.com/api/posts?${paramsString}`;
+        const response = await fetch(requestUrl);
+        const responseJSON = await response.json()
+        console.log('.....',responseJSON);
+  
+        const {data,pagination} = responseJSON;
+        setPostlist(data);
+        setPagination(pagination);
+      } catch (error) {
+        console.log('False loading', error.message);
+      }
+ 
+    }
+    fetchPostList();
+  },[filters])
+
+  function handlePageChage(newPage) {
+    console.log('New Page', newPage);
+    setFilters({
+      ...filters,
+      _page :newPage
+    })
+  }
+
   function handleClick(el) {
   
     const index = listItem.findIndex(x => x.id === el.id);
@@ -47,9 +89,12 @@ function App() {
         >
           Learn React
         </a>
-        <ColorBox/>
+        {/* <PostList posts={postList}/> */}
+        <Pagination pagination = {pagination}
+        onPageChange={handlePageChage}/>
+        {/* <ColorBox/>
         <Form onSubmit={handleOnSubmit}/>
-        <List todos={listItem} onTodoClick={handleClick}/>
+        <List todos={listItem} onTodoClick={handleClick}/> */}
       
       </header>
     </div>
