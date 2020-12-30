@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './App.scss';
 import Hero from './components/Hero/Hero';
 import logo from './logo.svg';
+import HomeRedux from './pages/HomePage/HomeRedux';
 
 
 
@@ -14,9 +15,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
+        <HomeRedux/>
         {/* <a
           className="App-link"
           href="https://reactjs.org"
@@ -25,9 +24,10 @@ function App() {
         >
           Learn React
         </a> */}
-          <p>{count}</p>
+ 
+          {/* <p>{count}</p>
           <button onClick={() => setCount( count + 1)}> Add</button>
-          <Hero  name="Kai"/>
+          <Hero  name="Kai"/> */}
       
       </header>
     </div>
